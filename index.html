@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sígrid Vila Bagaria</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --navy: #0f0f23;
+            --electric: #00ffff;
+            --coral: #ff3366;
+            --lime: #ccff00;
+            --cream: #fafafa;
+            --gray: #666;
+            --dark-gray: #333;
+            --light-gray: #e5e5e5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--navy);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: var(--electric);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+
+        .cursor.hover {
+            transform: scale(2);
+            background: var(--coral);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--electric), var(--coral), var(--lime));
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--navy);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .nav-dot.active {
+            background: var(--electric);
+            border-color: var(--electric);
+            transform: scale(1.3);
+        }
+
+        .nav-dot:hover {
+            background: var(--coral);
+            border-color: var(--coral);
+        }
+
+        /* Card Stack System */
+        .card-stack {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .card {
+            position: absolute;
+            width: 90vw;
+            max-width: 1200px;
+            height: 85vh;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 2px solid var(--navy);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* only hides outside edges */
+        }
+
+        .card:active {
+            cursor: grabbing;
+        }
+
+        .card.inactive {
+            transform: translate(-50%, -50%) scale(0.9) rotate(-5deg);
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .card.active {
+            z-index: 5;
+            transform: translate(-50%, -50%) scale(1) rotate(0deg);
+            opacity: 1;
+        }
+
+        .card.next {
+            transform: translate(-50%, -50%) scale(0.95) rotate(3deg);
+            opacity: 0.8;
+            z-index: 3;
+        }
+
+        .card.prev {
+            transform: translate(-50%, -50%) scale(0.85) rotate(-3deg);
+            opacity: 0.6;
+            z-index: 2;
+        }
+
+        /* Card Content (scrollable fix) */
+        .card-content {
+            flex: 1;
+            overflow-y: auto; /* scroll inside card */
+            padding: 60px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--electric) transparent;
+        }
+
+        .card-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        .card-content::-webkit-scrollbar-thumb {
+            background: var(--electric);
+            border-radius: 4px;
+        }
+        .card-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* Hero Card */
+        .hero-card {
+            background: var(--navy);
+            color: white;
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(3rem, 6vw, 6rem);
+            font-weight: 700;
+            line-height: 0.9;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-text .highlight {
+            color: var(--electric);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--lime);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 30px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-container {
+            position: relative;
+            width: 280px;
+            height: 350px;
+            background: var(--electric);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform: rotate(-5deg) translate(300px);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-container img {
+            width: 90%;
+            height: auto;
+            border-radius: 14px; /* smooth corners */
+            object-fit: cover; /* keeps proportions nice */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25); /* depth */
+            border: 3px solid rgba(255, 255, 255, 0.6); /* subtle border */
+            transition: transform 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
+        }
+
+
+        .profile-initials {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--navy);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 20px;
+        }
+
+        .profile-title {
+            color: var(--navy);
+            font-weight: 600;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .floating-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--coral);
+            border-radius: 50%;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .floating-dot:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; }
+        .floating-dot:nth-child(2) { top: 60%; right: 15%; animation-delay: 1s; }
+        .floating-dot:nth-child(3) { bottom: 20%; left: 30%; animation-delay: 2s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Experience Card */
+        .experience-card {
+            background: white;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 0;
+        }
+
+        .experience-sidebar {
+            background: var(--coral);
+            color: white;
+            padding: 60px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .experience-content {
+            padding: 60px;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        .stats-mini {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: auto;
+        }
+
+        .stat-mini {
+            text-align: center;
+        }
+
+        .stat-mini-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+            display: block;
+        }
+
+        .stat-mini-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .timeline-modern {
+            position: relative;
+        }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            border-left: 3px solid var(--light-gray);
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            background: var(--electric);
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+
+        .job-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 5px;
+        }
+
+        .job-company {
+            color: var(--coral);
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .job-duration {
+            color: var(--gray);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .job-description {
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        /* Projects Card */
+        .projects-card {
+            background: linear-gradient(135deg, var(--lime) 0%, var(--electric) 100%);
+            color: var(--navy);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            height: auto;
+        }
+
+        .project-item {
+            background: rgba(255,255,255,0.9);
+            padding: 40px;
+            border: 2px solid var(--navy);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-item:hover {
+            transform: rotate(2deg) scale(1.02);
+        }
+
+        .project-status {
+            display: inline-block;
+            background: var(--navy);
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--navy);
+        }
+
+        .project-meta {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .project-description {
+            color: var(--dark-gray);
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tech-tag {
+            background: var(--navy);
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Skills Card */
+        .skills-card {
+            background: var(--navy);
+            color: white;
+            display: grid;
+            grid-template-areas: 
+                "title title"
+                "technical soft"
+                "languages tools";
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .skills-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .skills-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: var(--electric);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .skill-list {
+            list-style: none;
+            display: grid;
+            gap: 15px;
+        }
+
+        .skill-item {
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .skill-item:hover {
+            color: var(--lime);
+            padding-left: 10px;
+        }
+
+        .skills-title {
+            grid-area: title;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* Contact Card */
+        .contact-card {
+            background: var(--electric);
+            color: var(--navy);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contact-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .contact-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+            max-width: 600px;
+            line-height: 1.6;
+            text-align: left;
+
+        }
+
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .contact-method {
+            background: var(--navy);
+            color: white;
+            padding: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .contact-method:hover {
+            background: var(--coral);
+            transform: rotate(-3deg) scale(1.05);
+        }
+
+        .contact-method h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .contact-method p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Card Navigation */
+        .card-nav {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 999;
+        }
+
+        .card-nav-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--navy);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card-nav-btn:hover {
+            background: var(--coral);
+            transform: scale(1.1);
+        }
+
+        .card-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+
+        .card-nav-btn:disabled:hover {
+            background: var(--navy);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .card {
+                width: 95vw;
+                height: 90vh;
+            }
+
+            .card-content {
+                padding: 30px;
+            }
+
+            .hero-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 30px;
+            }
+
+            .hero-visual {
+                order: -1;
+            }
+
+            .profile-container {
+                width: 200px;
+                height: 250px;
+            }
+
+            .experience-card {
+                grid-template-columns: 1fr;
+            }
+
+            .experience-sidebar {
+                padding: 30px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .skills-card {
+                grid-template-areas: 
+                    "title"
+                    "technical"
+                    "soft"
+                    "languages"
+                    "tools";
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .contact-methods {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .nav {
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        /* Animations */
+        .slide-in {
+            animation: slideIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -50%) scale(0.8) rotate(-10deg);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    
+    <div class="progress-bar">
+        <div class="progress-fill"></div>
+    </div>
+
+    <div class="nav" id="nav-dots">
+        <div class="nav-dot active"></div>
+        <div class="nav-dot"></div>
+        <div class="nav-dot"></div>
+        <div class="nav-dot"></div>
+        <div class="nav-dot"></div>
+    </div>
+
+    <div class="card-stack">
+        <!-- Hero Card -->
+        <div class="card hero-card active">
+            <div class="card-content">
+                <div class="hero-text">
+                    <h1><br><span class="highlight">Sígrid Vila Bagaria</span></h1>
+                    <div class="hero-subtitle">Medical Imaging Researcher</div>
+                    <div class="hero-description">
+                        Passionate about AI, technology, and data science. Curious and driven, always learning, innovating, and contributing through research and impactful solutions.
+                    </div>
+                    <div class="hero-meta">
+                        <span>🌍 Barcelona</span>
+                        <span>🌐 Multilingual</span>
+                        <span>✨ Computer Vision Engineer</span>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="profile-container">
+                        <div class="profile-title">PhD Student</div>
+                        <img width="128px" height="128px" src="https://media.licdn.com/dms/image/v2/D4D03AQFdRfEDkB_eqQ/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1686073110273?e=1761177600&v=beta&t=fhiqV4-3GQnYPcVixUX1Y9gBTzSMo7ysvcUTZ2cwzpA">
+                    </div>
+                    <div class="floating-elements">
+                        <div class="floating-dot"></div>
+                        <div class="floating-dot"></div>
+                        <div class="floating-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience Card -->
+        <div class="card experience-card inactive">
+            <div class="experience-sidebar">
+                <div>
+                    <div class="section-title">Experience</div>
+                    <div class="section-subtitle">Focusing on cutting-edge medical imaging research</div>
+                </div>
+                <div class="stats-mini">
+                    <div class="stat-mini">
+                        <span class="stat-mini-number">2+</span>
+                        <div class="stat-mini-label">Years</div>
+                    </div>
+                    <div class="stat-mini">
+                        <span class="stat-mini-number">3+</span>
+                        <div class="stat-mini-label">Projects</div>
+                    </div>
+                </div>
+            </div>
+            <div class="experience-content card-content">
+                <div class="timeline-modern">
+                    <div class="timeline-item">
+                        <div class="job-title">Phd Student</div>
+                        <div class="job-company">Universitat Politècnica de Catalunya (UPC)</div>
+                        <div class="job-duration">2025 - Present</div>
+                        <div class="job-description">
+                            MRI generation, H&E classification and subtyping, cell detection and classification.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="job-title">Research Engineer</div>
+                        <div class="job-company">Universitat Politècnica de Catalunya (UPC)</div>
+                        <div class="job-duration">2024 - 2025</div>
+                        <div class="job-description">
+                            Research and development of prostate MRI synthesis systems within the Image Processing Group (GPI).
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="job-title">Research Assistant</div>
+                        <div class="job-company">Universitat Politècnica de Catalunya (UPC)</div>
+                        <div class="job-duration">2023</div>
+                        <div class="job-description">
+                            Research internship in Sport Analysis using Deep Learning and Computer Vision at the Image Processing Group (GPI), funded by an INIREC scholarship.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Projects Card -->
+        <div class="card projects-card inactive">
+            <div class="card-content">
+                <div class="section-title">Projects</div>
+                <div class="projects-grid">
+                    <div class="project-item">
+                        <div class="project-status">Ongoing</div>
+                        <div class="project-title">AI-based pathology for subtyping of Gastric Adenocarcinoma</div>
+                        <div class="project-meta">2025 - Present</div>
+                        <div class="project-description">
+                            Development of an AI pipeline to classify H&E according to genetic subtypes. <br> 
+                            Collaboration with IRBLleida.
+                        </div>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Transfer</span>
+                            <span class="tech-tag">Collaboration</span>
+                            <span class="tech-tag">Innovation</span>
+                        </div>
+                    </div>
+
+                    <div class="project-item">
+                        <div class="project-status">Featured</div>
+                        <div class="project-title">Endometrial cell classification</div>
+                        <div class="project-meta">2025 - Present</div>
+                        <div class="project-description">
+                            Development of an AI model to classify endometrial cells for physician aid.  <br> 
+                            Part of <a href="https://ics.gencat.cat/ca/detall/noticia/DigipatICS">DigiPatICS</a> project.
+                        </div>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Future</span>
+                            <span class="tech-tag">Transfer</span>
+                            <span class="tech-tag">Innovation</span>
+                        </div>
+                    </div>
+
+                    <div class="project-item">
+                        <div class="project-status">Completed</div>
+                        <div class="project-title">Prostate MR image generation</div>
+                        <div class="project-meta">2024 - 2026</div>
+                        <div class="project-description">
+                            Collaboration to develop generative models for Prostate MRI to improve downstream calssification tasks. <br> 
+                            Part of <a href="https://www.fluteproject.eu/">FLUTE</a> European Union project. <br>
+                            European project Federated Learning and mUlti-party computation Techniques for prostatE cancer (HORIZON-101095382-FLUTE).
+                            
+                        </div>
+                        <div class="tech-tags">
+                            <span class="tech-tag">EU-Horizon</span>
+                            <span class="tech-tag">Health Care</span>
+                        </div>
+                    </div>
+
+                    <div class="project-item">
+                        <div class="project-status">Completed</div>
+                        <div class="project-title">Basketball player tracking</div>
+                        <div class="project-meta">2023</div>
+                        <div class="project-description">
+                            Implementing a tracking pipeline for online & offline player and ball tracking. <br> 
+                            Collaboration with MediaPro. <br> 
+                            Read article <a href="https://upcommons.upc.edu/entities/publication/32ca42d5-c2a4-4e0b-814c-612a71cd4e9d">here</a>.
+                        </div>
+                        <div class="tech-tags">
+                            <span class="tech-tag">Sports</span>
+                            <span class="tech-tag">Media</span>
+                            <span class="tech-tag">Innovation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Card -->
+        <div class="card skills-card inactive">
+            <div class="card-content">
+                <div class="skills-title">
+                    <div class="section-title" style="color: var(--electric);">Skills</div>
+                    <div class="section-subtitle">Blending strategy, creativity, and communication</div>
+                </div>
+
+                <div class="skills-section">
+                    <h3>Technical</h3>
+                    <ul class="skill-list">
+                        <li class="skill-item">Project Management (Agile, Waterfall)</li>
+                        <li class="skill-item">Data Analysis & Visualization</li>
+                        <li class="skill-item">Digital Transformation</li>
+                    </ul>
+                </div>
+
+                <div class="skills-section">
+                    <h3>Soft Skills</h3>
+                    <ul class="skill-list">
+                        <li class="skill-item">Strategic Thinking</li>
+                        <li class="skill-item">Cross-Cultural Communication</li>
+                        <li class="skill-item">Leadership & Facilitation</li>
+                    </ul>
+                </div>
+
+                <div class="skills-section">
+                    <h3>Languages</h3>
+                    <ul class="skill-list">
+                        <li class="skill-item">Catalan (Native)</li>
+                        <li class="skill-item">Spanish (Native)</li>
+                        <li class="skill-item">English (Fluent)</li>
+                        <li class="skill-item">French (Intermediate)</li>
+                    </ul>
+                </div>
+
+                <div class="skills-section">
+                    <h3>Tools</h3>
+                    <ul class="skill-list">
+                        <li class="skill-item">MS Office Suite</li>
+                        <li class="skill-item">Miro, Figma</li>
+                        <li class="skill-item">Data Analysis Tools</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Card -->
+        <div class="card contact-card inactive">
+            <div class="card-content">
+                <div class="contact-title">Let's Connect</div>
+                <div class="contact-subtitle">
+                    I’m always open to new collaborations, exciting projects, or simply exchanging ideas. 
+                    Reach out through any of the channels below!
+                </div>
+                <div class="contact-methods">
+                    <a href="mailto:sigrid.vila@upc.edu" class="contact-method">
+                        <h4>Email</h4>
+                        <p>sigrid.vila@upc.edu</p>
+                    </a>
+                    <a href="www.linkedin.com/in/sígrid-vila-bagaria-17a8a9238" target="_blank" class="contact-method">
+                        <h4>LinkedIn</h4>
+                        <p>/in/sígrid-vila-bagaria</p>
+                    </a>
+                    <a href="https://github.com/siiigrid" target="_blank" class="contact-method">
+                        <h4>GitHub</h4>
+                        <p>@siiigrid</p>
+                    </a>
+                        <a href="https://scholar.google.com/citations?user=68dAJXcAAAAJ&hl=ca&oi=ao" target="_blank" class="contact-method">
+                        <h4>Scholar</h4>
+                        <p>Sígrid Vila-Bagaria</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Navigation -->
+    <div class="card-nav">
+        <button class="card-nav-btn" id="prev-btn">‹</button>
+        <button class="card-nav-btn" id="next-btn">›</button>
+    </div>
+
+    <script>
+        const cursor = document.querySelector('.cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.pageX + 'px';
+            cursor.style.top = e.pageY + 'px';
+        });
+
+        document.querySelectorAll('a, button, .card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        const cards = document.querySelectorAll('.card');
+        const navDots = document.querySelectorAll('.nav-dot');
+        let currentIndex = 0;
+
+        function updateCards() {
+            cards.forEach((card, i) => {
+                card.classList.remove('active', 'inactive', 'next', 'prev');
+                if (i === currentIndex) {
+                    card.classList.add('active', 'slide-in');
+                } else if (i === currentIndex - 1) {
+                    card.classList.add('prev');
+                } else if (i === currentIndex + 1) {
+                    card.classList.add('next');
+                } else {
+                    card.classList.add('inactive');
+                }
+            });
+            updateDots();
+            updateNavButtons();
+            updateProgress();
+        }
+
+        function updateDots() {
+            navDots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        function updateNavButtons() {
+            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            document.getElementById('next-btn').disabled = currentIndex === cards.length - 1;
+        }
+
+        function updateProgress() {
+            const fill = document.querySelector('.progress-fill');
+            fill.style.width = ((currentIndex + 1) / cards.length) * 100 + '%';
+        }
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            if (currentIndex < cards.length - 1) {
+                currentIndex++;
+                updateCards();
+            }
+        });
+
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCards();
+            }
+        });
+
+        navDots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                currentIndex = i;
+                updateCards();
+            });
+        });
+
+        updateCards();
+    </script>
+</body>
+</html>
