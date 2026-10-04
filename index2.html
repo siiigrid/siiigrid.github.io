@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sígrid Vila Bagaria — Medical Imaging Researcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --ink: #111118;
+  --paper: #f7f5f0;
+  --warm: #f2ede4;
+  --accent: #c0392b;
+  --accent2: #2a6496;
+  --gold: #d4a017;
+  --mid: #888880;
+  --light: #ddd9d0;
+  --card-white: #fefefe;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ── CURSOR ─────────────────────────────── */
+.cur {
+  position: fixed; pointer-events: none; z-index: 9999;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width .2s, height .2s, background .2s;
+}
+body:has(a:hover) .cur,
+body:has(button:hover) .cur {
+  width: 24px; height: 24px;
+  background: var(--accent2);
+}
+
+/* ── PROGRESS ────────────────────────────── */
+.prog {
+  position: fixed; top: 0; left: 0; z-index: 1000;
+  width: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--gold) 50%, var(--accent2) 100%);
+  transition: width .2s;
+}
+
+/* ── NAV ─────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 50px;
+  background: rgba(247,245,240,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--light);
+}
+
+.nav-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem;
+  letter-spacing: .01em;
+}
+
+.nav-links {
+  display: flex; gap: 36px; list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none; color: var(--mid);
+  font-size: .85rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+  transition: color .2s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+/* ── HERO ────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: grid; grid-template-columns: 1fr 420px;
+  gap: 0; align-items: stretch;
+  padding-top: 60px;
+}
+
+.hero-left {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 100px 80px 80px 80px;
+  background: var(--paper);
+}
+
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: .8rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 20px;
+}
+
+.hero-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(3.5rem, 5.5vw, 6rem);
+  line-height: .95; letter-spacing: -.02em;
+  margin-bottom: 28px;
+}
+
+.hero-name em {
+  font-style: italic; color: var(--accent2);
+}
+
+.hero-role {
+  font-size: 1.2rem; font-weight: 300; color: var(--mid);
+  margin-bottom: 36px; line-height: 1.5;
+}
+
+.hero-bio {
+  font-size: 1.05rem; line-height: 1.75; color: #444;
+  max-width: 540px; margin-bottom: 48px;
+}
+
+.hero-chips {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 48px;
+}
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: var(--warm); border: 1px solid var(--light);
+  font-size: .82rem; font-weight: 500; color: var(--ink);
+  border-radius: 2px;
+  font-family: 'DM Mono', monospace;
+}
+
+.hero-actions {
+  display: flex; gap: 16px; flex-wrap: wrap;
+}
+
+.btn-primary {
+  display: inline-block; padding: 14px 32px;
+  background: var(--ink); color: var(--paper);
+  text-decoration: none; font-size: .9rem; font-weight: 600;
+  letter-spacing: .04em;
+  transition: background .2s, transform .15s;
+  border: 2px solid var(--ink);
+}
+.btn-primary:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-2px); }
+
+.btn-outline {
+  display: inline-block; padding: 14px 32px;
+  background: transparent; color: var(--ink);
+  text-decoration: none; font-size: .9rem; font-weight: 600;
+  letter-spacing: .04em;
+  border: 2px solid var(--ink);
+  transition: all .2s;
+}
+.btn-outline:hover { background: var(--ink); color: var(--paper); transform: translateY(-2px); }
+
+.hero-right {
+  background: var(--ink);
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 60px 50px;
+  position: relative; overflow: hidden;
+}
+
+.hero-img-wrap {
+  position: relative; z-index: 2;
+  margin-bottom: 40px;
+}
+
+.hero-img-frame {
+  width: 240px; height: 300px;
+  border: 2px solid rgba(255,255,255,.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-img-frame img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(20%);
+  transition: filter .3s;
+}
+.hero-img-frame:hover img { filter: grayscale(0); }
+
+.hero-img-label {
+  position: absolute; bottom: -1px; left: -1px; right: -1px;
+  background: var(--accent);
+  padding: 10px 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem; letter-spacing: .1em; color: white; text-transform: uppercase;
+}
+
+.hero-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  position: relative; z-index: 2;
+}
+
+.stat {
+  border-top: 1px solid rgba(255,255,255,.15);
+  padding-top: 16px;
+}
+
+.stat-n {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem; color: white; line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-l {
+  font-size: .8rem; color: rgba(255,255,255,.5);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: .06em; text-transform: uppercase;
+}
+
+/* grid decoration */
+.hero-grid {
+  position: absolute; inset: 0; z-index: 0; opacity: .04;
+  background-image:
+    linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── SECTIONS ────────────────────────────── */
+section {
+  padding: 100px 80px;
+  border-top: 1px solid var(--light);
+}
+
+.section-header {
+  display: flex; align-items: baseline; gap: 24px;
+  margin-bottom: 60px;
+}
+
+.section-num {
+  font-family: 'DM Mono', monospace;
+  font-size: .8rem; color: var(--accent); letter-spacing: .1em;
+}
+
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.8rem; letter-spacing: -.02em;
+}
+
+.section-rule {
+  flex: 1; height: 1px; background: var(--light); margin-left: 20px;
+}
+
+/* ── AWARDS ──────────────────────────────── */
+#awards { background: var(--ink); color: white; }
+#awards .section-num { color: var(--gold); }
+#awards .section-title { color: white; }
+#awards .section-rule { background: rgba(255,255,255,.12); }
+
+.awards-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+}
+
+.award-card {
+  background: rgba(255,255,255,.04);
+  padding: 40px 36px;
+  border: 1px solid rgba(255,255,255,.06);
+  transition: background .2s, transform .2s;
+  position: relative; overflow: hidden;
+}
+
+.award-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .3s;
+}
+
+.award-card:hover::before { transform: scaleX(1); }
+.award-card:hover { background: rgba(255,255,255,.07); transform: translateY(-4px); }
+
+.award-icon {
+  width: 36px; height: 36px; margin-bottom: 20px; display: block;
+  color: var(--gold);
+}
+.award-icon svg { width: 36px; height: 36px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+
+.award-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem; color: white;
+  margin-bottom: 8px; line-height: 1.3;
+}
+
+.award-source {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem; color: var(--gold);
+  letter-spacing: .06em; margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.award-desc {
+  font-size: .9rem; color: rgba(255,255,255,.55); line-height: 1.6;
+}
+
+/* ── RESEARCH / EXPERIENCE ───────────────── */
+#experience { background: var(--warm); }
+
+.timeline {
+  display: grid; gap: 0;
+  border-left: 2px solid var(--light);
+  margin-left: 12px;
+}
+
+.tl-item {
+  display: grid; grid-template-columns: 200px 1fr;
+  gap: 40px; padding: 0 0 52px 52px;
+  position: relative;
+}
+
+.tl-item::before {
+  content: '';
+  position: absolute; left: -9px; top: 6px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--paper); border: 3px solid var(--light);
+  transition: border-color .2s, background .2s;
+}
+.tl-item:hover::before { border-color: var(--accent); background: var(--accent); }
+
+.tl-date {
+  font-family: 'DM Mono', monospace;
+  font-size: .82rem; color: var(--mid);
+  padding-top: 4px; letter-spacing: .04em;
+}
+
+.tl-body {}
+
+.tl-role {
+  font-size: 1.2rem; font-weight: 600; margin-bottom: 4px;
+}
+
+.tl-org {
+  font-family: 'DM Mono', monospace;
+  font-size: .82rem; color: var(--accent2);
+  letter-spacing: .04em; margin-bottom: 12px;
+}
+
+.tl-desc {
+  font-size: .95rem; color: #555; line-height: 1.7;
+}
+
+/* ── PROJECTS ────────────────────────────── */
+#projects { background: var(--paper); }
+
+.projects-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+}
+
+.proj-card {
+  background: var(--card-white);
+  border: 1px solid var(--light);
+  padding: 36px 36px 32px;
+  transition: transform .2s, box-shadow .2s;
+  position: relative;
+}
+
+.proj-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,.08); }
+
+.proj-badge {
+  display: inline-block; margin-bottom: 20px;
+  padding: 5px 12px;
+  font-family: 'DM Mono', monospace; font-size: .72rem;
+  letter-spacing: .1em; text-transform: uppercase;
+  font-weight: 500;
+}
+.badge-ongoing { background: #e8f5e9; color: #2e7d32; }
+.badge-completed { background: #e3f2fd; color: #1565c0; }
+.badge-featured { background: #fff3e0; color: #e65100; }
+
+.proj-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3;
+}
+
+.proj-period {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem; color: var(--mid); margin-bottom: 16px;
+}
+
+.proj-desc {
+  font-size: .92rem; color: #555; line-height: 1.7; margin-bottom: 20px;
+}
+.proj-desc a { color: var(--accent2); }
+
+.proj-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.proj-tag {
+  padding: 4px 12px;
+  background: var(--warm); border: 1px solid var(--light);
+  font-size: .75rem; color: var(--mid); font-family: 'DM Mono', monospace;
+}
+
+/* ── PUBLICATIONS ────────────────────────── */
+#publications { background: var(--warm); }
+
+.pubs-list { display: grid; gap: 20px; }
+
+.pub-card {
+  background: var(--card-white);
+  border: 1px solid var(--light);
+  padding: 32px 36px;
+  display: grid; grid-template-columns: 1fr auto;
+  gap: 24px; align-items: start;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.pub-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0,0,0,.07); }
+
+.pub-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem; margin-bottom: 10px; line-height: 1.35;
+}
+
+.pub-authors {
+  font-size: .88rem; color: #666; margin-bottom: 6px; line-height: 1.5;
+}
+.pub-me { font-weight: 600; color: var(--ink); }
+
+.pub-venue {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem; color: var(--accent); letter-spacing: .04em;
+}
+
+.pub-badge {
+  display: inline-block; margin-bottom: 10px;
+  padding: 3px 10px;
+  font-family: 'DM Mono', monospace; font-size: .7rem;
+  letter-spacing: .1em; text-transform: uppercase; font-weight: 500;
+}
+.badge-accepted { background: #e8f5e9; color: #2e7d32; }
+
+.pub-links { display: flex; flex-direction: column; gap: 8px; white-space: nowrap; }
+
+.pub-link {
+  display: inline-block; padding: 7px 16px;
+  background: var(--warm); border: 1px solid var(--light);
+  text-decoration: none; color: var(--ink);
+  font-size: .78rem; font-family: 'DM Mono', monospace;
+  transition: background .2s, color .2s;
+}
+.pub-link:hover { background: var(--ink); color: white; }
+
+/* ── SKILLS + EDUCATION ──────────────────── */
+#skills-edu {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  padding: 0;
+}
+
+.skills-col {
+  padding: 100px 80px;
+  background: var(--paper);
+  border-right: 1px solid var(--light);
+}
+
+.edu-col {
+  padding: 100px 80px;
+  background: var(--warm);
+}
+
+.skills-group { margin-bottom: 40px; }
+
+.skills-group h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--accent2); margin-bottom: 16px;
+}
+
+.skill-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.skill-pill {
+  padding: 8px 16px;
+  background: var(--card-white); border: 1px solid var(--light);
+  font-size: .88rem; color: var(--ink);
+  transition: all .2s; cursor: default;
+}
+.skill-pill:hover { background: var(--ink); color: white; border-color: var(--ink); }
+
+.lang-pill {
+  padding: 8px 16px;
+  font-size: .88rem; border: 1px solid var(--light);
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace;
+}
+
+.lang-level {
+  font-size: .72rem; color: var(--mid);
+}
+
+.edu-item { margin-bottom: 44px; padding-bottom: 44px; border-bottom: 1px solid var(--light); }
+.edu-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.edu-degree {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem; margin-bottom: 6px; line-height: 1.3;
+}
+
+.edu-inst {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem; color: var(--accent2);
+  letter-spacing: .04em; margin-bottom: 4px;
+}
+
+.edu-year {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem; color: var(--mid); margin-bottom: 12px;
+}
+
+.edu-note {
+  font-size: .9rem; color: #666; line-height: 1.65; font-style: italic;
+}
+
+.edu-badge {
+  display: inline-block; margin-top: 10px;
+  padding: 4px 12px; background: #fffde7; border: 1px solid #f9a825;
+  font-size: .75rem; color: #8a6200;
+  font-family: 'DM Mono', monospace;
+}
+
+/* ── TEACHING ────────────────────────────── */
+#teaching { background: var(--paper); }
+
+.teaching-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.teach-card {
+  background: var(--card-white); border: 1px solid var(--light);
+  padding: 32px 28px;
+  transition: transform .2s, box-shadow .2s;
+}
+.teach-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,.08); }
+
+.teach-course {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem; margin-bottom: 8px; line-height: 1.3;
+}
+
+.teach-program {
+  font-size: .83rem; color: var(--mid); margin-bottom: 6px; line-height: 1.5;
+}
+
+.teach-period {
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem; color: var(--accent2); letter-spacing: .04em;
+  margin-bottom: 14px;
+}
+
+.teach-desc {
+  font-size: .88rem; color: #666; line-height: 1.6;
+}
+
+/* ── CONTACT ─────────────────────────────── */
+#contact {
+  background: var(--ink); color: white;
+  padding: 100px 80px;
+  border-top: none;
+}
+
+#contact .section-num { color: var(--gold); }
+#contact .section-title { color: white; }
+#contact .section-rule { background: rgba(255,255,255,.1); }
+
+.contact-intro {
+  font-size: 1.1rem; color: rgba(255,255,255,.6);
+  max-width: 600px; line-height: 1.8; margin-bottom: 60px;
+}
+
+.contact-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;
+  margin-bottom: 60px;
+}
+
+.contact-box {
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+  padding: 32px 28px; text-decoration: none;
+  transition: background .2s, transform .2s;
+  display: block;
+}
+.contact-box:hover { background: var(--accent); transform: translateY(-4px); }
+
+.contact-box-icon { font-size: 1.4rem; margin-bottom: 14px; display: block; }
+
+.contact-box-label {
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.5); margin-bottom: 6px;
+}
+
+.contact-box-value {
+  font-size: .95rem; color: white; font-weight: 500;
+}
+
+.footer-line {
+  padding-top: 40px; border-top: 1px solid rgba(255,255,255,.1);
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.footer-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem; color: rgba(255,255,255,.4);
+}
+
+.footer-copy {
+  font-family: 'DM Mono', monospace;
+  font-size: .78rem; color: rgba(255,255,255,.3);
+}
+
+.chip svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+.edu-badge svg { width: 12px; height: 12px; stroke: #8a6200; fill: none; stroke-width: 2; vertical-align: middle; margin-right: 4px; }
+.contact-box-icon { display: block; margin-bottom: 14px; }
+.contact-box-icon svg { width: 24px; height: 24px; stroke: rgba(255,255,255,.7); fill: none; stroke-width: 1.5; }
+.contact-box:hover .contact-box-icon svg { stroke: white; }
+@media (max-width: 900px) {
+  nav { padding: 18px 28px; }
+  .nav-links { gap: 20px; }
+  .hero { grid-template-columns: 1fr; }
+  .hero-left { padding: 100px 32px 60px; }
+  .hero-right { padding: 48px 32px; flex-direction: row; align-items: center; gap: 40px; }
+  .hero-img-wrap { margin-bottom: 0; }
+  .hero-stats { grid-template-columns: repeat(4, 1fr); flex: 1; }
+  section { padding: 72px 32px; }
+  .awards-grid { grid-template-columns: 1fr; gap: 12px; }
+  .tl-item { grid-template-columns: 1fr; gap: 8px; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .pub-card { grid-template-columns: 1fr; }
+  .pub-links { flex-direction: row; }
+  #skills-edu { grid-template-columns: 1fr; }
+  .skills-col, .edu-col { padding: 72px 32px; }
+  .teaching-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr 1fr; }
+  #contact { padding: 72px 32px; }
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="prog" id="prog"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-name">Sígrid Vila Bagaria</div>
+  <ul class="nav-links">
+    <li><a href="#awards">Awards</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#publications">Publications</a></li>
+    <li><a href="#teaching">Teaching</a></li>
+    <li><a href="#skills-edu">Skills & Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="border: none; padding: 0;">
+  <div class="hero-left">
+    <div class="hero-eyebrow">PhD Student · Medical Imaging · Barcelona</div>
+    <h1 class="hero-name">Sígrid<br><em>Vila Bagaria</em></h1>
+    <p class="hero-role">Computer Vision Engineer & Medical Imaging Researcher<br>at Universitat Politècnica de Catalunya</p>
+    <p class="hero-bio">
+      Developing AI pipelines for medical image analysis — from generative MRI synthesis to histopathology classification. Curious, technically rigorous, and driven by problems that matter for people's health.
+    </p>
+    <div class="hero-chips">
+      <span class="chip"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>Computer Vision</span>
+      <span class="chip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M4.22 4.22l2.12 2.12m11.32 11.32 2.12 2.12M2 12h3m14 0h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>Medical Imaging</span>
+      <span class="chip"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Generative Models</span>
+      <span class="chip"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Computational Pathology</span>
+    </div>
+    <div class="hero-actions">
+      <a href="#publications" class="btn-primary">View Publications</a>
+      <a href="#contact" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-grid"></div>
+    <div class="hero-img-wrap">
+      <div class="hero-img-frame">
+        <img src="currivulim_foto.jpeg" alt="Sígrid Vila Bagaria">
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-n">3+</div>
+        <div class="stat-l">Years Research</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">4+</div>
+        <div class="stat-l">Projects</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">6</div>
+        <div class="stat-l">Publications</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">3</div>
+        <div class="stat-l">Awards</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section id="awards">
+  <div class="section-header">
+    <span class="section-num">00</span>
+    <h2 class="section-title">Awards & Honours</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="awards-grid">
+    <div class="award-card">
+      <span class="award-icon"><svg viewBox="0 0 24 24"><path d="M12 15l-2 5-3-1 1-5m4 1l2 5 3-1-1-5"/><circle cx="12" cy="8" r="5"/><path d="M12 3v2"/></svg></span>
+      <div class="award-title">Best Student Record Award</div>
+      <div class="award-source">CVC · Master's in Computer Vision · 2024</div>
+      <div class="award-desc">Awarded for outstanding academic performance throughout the Master's programme at Centre de Visió per Computador.</div>
+    </div>
+    <div class="award-card">
+      <span class="award-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg></span>
+      <div class="award-title">Best Master Thesis Award</div>
+      <div class="award-source">ACMCV · 2024</div>
+      <div class="award-desc">Thesis: <em>"Synthesis of prostate MRI with generative adversarial networks"</em> — recognised as the best thesis in the MSc promotion by the Catalan Association for Computer Vision.</div>
+    </div>
+    <div class="award-card">
+      <span class="award-icon"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg></span>
+      <div class="award-title">FI-STEP PhD Grant</div>
+      <div class="award-source">Generalitat de Catalunya · 2025</div>
+      <div class="award-desc">Competitive PhD funding grant awarded by the Generalitat de Catalunya for doctoral research in medical imaging and computer vision.</div>
+    </div>
+    <div class="award-card">
+      <span class="award-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+      <div class="award-title">Erasmus+ Exchange Programme</div>
+      <div class="award-source">Chalmers University · 2022</div>
+      <div class="award-desc">Selected for Erasmus+ exchange at Chalmers University of Technology, Sweden, during Bachelor's in Data Science and Engineering.</div>
+    </div>
+    <div class="award-card">
+      <span class="award-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></span>
+      <div class="award-title">INIREC Research Scholarship</div>
+      <div class="award-source">UPC · 2023</div>
+      <div class="award-desc">Funded research internship in sport analysis using deep learning and computer vision at the Image Processing Group (GPI), UPC.</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Research Experience</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">2025 — Present</div>
+      <div class="tl-body">
+        <div class="tl-role">PhD Student</div>
+        <div class="tl-org">Universitat Politècnica de Catalunya (UPC) — Image Processing Group (GPI)</div>
+        <div class="tl-desc">MRI generation, H&E histopathology classification and subtyping, cell detection and classification. Funded by the FI-STEP grant from the Generalitat de Catalunya.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2024 — 2025</div>
+      <div class="tl-body">
+        <div class="tl-role">Research Engineer</div>
+        <div class="tl-org">Universitat Politècnica de Catalunya (UPC) — Image Processing Group (GPI)</div>
+        <div class="tl-desc">Research and development of prostate MRI synthesis systems within the GPI group. Contributed to the EU Horizon FLUTE project on federated learning for prostate cancer.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2023</div>
+      <div class="tl-body">
+        <div class="tl-role">Research Assistant (INIREC Scholar)</div>
+        <div class="tl-org">Universitat Politècnica de Catalunya (UPC) — Image Processing Group (GPI)</div>
+        <div class="tl-desc">Research internship in sport analysis using Deep Learning and Computer Vision. Developed a tracking pipeline for online and offline player and ball tracking in collaboration with MediaPro.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Projects</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="projects-grid">
+    <div class="proj-card">
+      <div class="proj-badge badge-ongoing">Ongoing</div>
+      <div class="proj-title">AI-based Pathology for Gastric Adenocarcinoma Subtyping</div>
+      <div class="proj-period">2025 — Present</div>
+      <div class="proj-desc">Development of an AI pipeline to classify H&E slides according to genetic subtypes. Collaboration with <strong>IRBLleida</strong>. Related publications: <em>CCMIL</em> (MICCAI 2026) and <em>VITA</em> (MIDL 2026).</div>
+      <div class="proj-tags">
+        <span class="proj-tag">Histopathology</span>
+        <span class="proj-tag">Classification</span>
+        <span class="proj-tag">IRBLleida</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-badge badge-ongoing">Ongoing</div>
+      <div class="proj-title"> Spatial Analysis of HER2 Expression Patterns</div>
+      <div class="proj-period">2025 - present</div>
+      <div class="proj-desc"> Development of CV pipeline to analyse and evaluate HER2 status in endometrial tissue.</div>
+      <div class="proj-tags">
+        <span class="proj-tag">WSI analysis</span>
+        <span class="proj-tag">Histopathology</span>
+        <span class="proj-tag">Clinical App</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-badge badge-ongoing">Ongoing</div>
+      <div class="proj-title">Endometrial Cell Classification</div>
+      <div class="proj-period">2025 — Present</div>
+      <div class="proj-desc">AI model to classify endometrial cells to aid physicians in diagnosis. Part of the <a href="https://ics.gencat.cat/ca/detall/noticia/DigipatICS" target="_blank">DigiPatICS</a> project funded by the ICS. Related publication: <em>Dual-CellNucDETR</em> (MICCAI 2026).</div>
+      <div class="proj-tags">
+        <span class="proj-tag">Cell Classification</span>
+        <span class="proj-tag">DigiPatICS</span>
+        <span class="proj-tag">Clinical AI</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-badge badge-completed">Completed</div>
+      <div class="proj-title">Prostate MR Image Generation</div>
+      <div class="proj-period">2024 — 2026</div>
+      <div class="proj-desc">Generative models for synthetic prostate MRI to improve downstream classification. Part of the <a href="https://www.fluteproject.eu/" target="_blank">FLUTE</a> EU Horizon project on federated learning for prostate cancer diagnostics. Related publication: <em>Anatomically Guided 3D Diffusion Models for Synthetic Prostate MRI Generation</em> (MICCAI 2025).</div>
+      <div class="proj-tags">
+        <span class="proj-tag">Generative Models</span>
+        <span class="proj-tag">EU Horizon</span>
+        <span class="proj-tag">Federated Learning</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-badge badge-completed">Completed</div>
+      <div class="proj-title">Basketball Player Tracking</div>
+      <div class="proj-period">2023</div>
+      <div class="proj-desc">Online and offline tracking pipeline for players and ball. Collaboration with <strong>MediaPro</strong>. <a href="https://upcommons.upc.edu/entities/publication/32ca42d5-c2a4-4e0b-814c-612a71cd4e9d" target="_blank">Read publication →</a></div>
+      <div class="proj-tags">
+        <span class="proj-tag">Computer Vision</span>
+        <span class="proj-tag">Tracking</span>
+        <span class="proj-tag">MediaPro</span>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- PUBLICATIONS -->
+<section id="publications">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Publications</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="pubs-list">
+    <div class="pub-card">
+      <div>
+        <div class="pub-title">Zero-Cost Virtual RNA: Approximating Immunotherapy Signatures via Cross-Modal WSI Retrieval</div>
+        <div class="pub-authors"><span class="pub-me">Sígrid Vila-Bagaria</span>, Mar Teixidó, Miquel Piñol, Felip Vilardell, Robert Montal, Verónica Vilaplana</div>
+        <div class="pub-venue">MIDL 2026 — Short Papers</div>
+      </div>
+      <div class="pub-links">
+        <a href="vita_midl2026.pdf" target="_blank" class="pub-link">PDF</a>
+      </div>
+    </div>
+
+    <div class="pub-card">
+      <div>
+        <div class="pub-title">Cross-Modal Contrastive Learning for the Retrieval of Immunotherapy-Associated Molecular Signatures from Histopathology</div>
+        <div class="pub-authors"><span class="pub-me">Sígrid Vila-Bagaria</span>, Mar Teixidó, Miquel Piñol, Felip Vilardell, Robert Montal, Verónica Vilaplana</div>
+        <div class="pub-venue">MICCAI 2026 — CAPTION Workshop</div>
+      </div>
+      <div class="pub-links">
+        <a href="ccmil_miccai2026.pdf" target="_blank" class="pub-link">PDF</a>
+        <span class="pub-link" style="opacity:.4;cursor:default;">DOI</span>
+      </div>
+    </div>
+
+    <div class="pub-card">
+      <div>
+        <div class="pub-title">Dual-CellNucDETR: Context-Aware Object-Level Cell Analysis</div>
+        <div class="pub-authors">Maria Ysern*, <span class="pub-me">Sígrid Vila-Bagaria*</span>, Oscar Pina, Verónica Vilaplana <span style="font-size:.8em;color:var(--mid)">(*equal contribution)</span></div>
+        <div class="pub-venue">MICCAI 2026 — COMPAYL Workshop</div>
+      </div>
+      <div class="pub-links">
+        <a href="dual_celldetr_miccai2026.pdf" target="_blank" class="pub-link">PDF</a>
+        <span class="pub-link" style="opacity:.4;cursor:default;">DOI</span>
+      </div>
+    </div>
+
+    <div class="pub-card">
+      <div>
+        <div class="pub-title">Anatomically Guided 3D Diffusion Models for Synthetic Prostate MRI Generation</div>
+        <div class="pub-authors">Claudia Giardina, <span class="pub-me">Sígrid Vila-Bagaria</span>, Carlos Albornés, Montse Pardàs, Verónica Vilaplana</div>
+        <div class="pub-venue">MICCAI Workshop on Deep Generative Models, pp. 288–297 · 2025</div>
+      </div>
+      <div class="pub-links">
+        <a href="https://drive.google.com/file/d/1bsSjkoGXGhq_BbGVDrbd2tRRe3-a8W54/view?usp=sharing" target="_blank" class="pub-link">PDF</a>
+        <a href="https://link.springer.com/chapter/10.1007/978-3-032-05472-2_28" target="_blank" class="pub-link">DOI</a>
+      </div>
+    </div>
+
+    <div class="pub-card">
+      <div>
+        <div class="pub-title">Synthesis of Prostate MRI with Generative Adversarial Networks</div>
+        <div class="pub-authors"><span class="pub-me">Sígrid Vila Bagaria</span>, Montse Pardàs, Verónica Vilaplana</div>
+        <div class="pub-venue">Master Thesis · ACMCV Best Thesis Award · 2024</div>
+      </div>
+      <div class="pub-links">
+        <a href="https://drive.google.com/file/d/1X7w2OisJERW20HhuQIdpkJScpKfqbHBV/view?usp=sharing" target="_blank" class="pub-link">PDF</a>
+        <a href="https://www.cvc.uab.es/acmcv/?page_id=1205" target="_blank" class="pub-link">ACMCV</a>
+      </div>
+    </div>
+
+    <div class="pub-card">
+      <div>
+        <div class="pub-title">Visual Sport Analysis Using Computer Vision and Deep Learning Techniques</div>
+        <div class="pub-authors"><span class="pub-me">Sígrid Vila Bagaria</span>, Ramon Morros, Javier Ruiz</div>
+        <div class="pub-venue">Bachelor Thesis · UPCommons · 2023</div>
+      </div>
+      <div class="pub-links">
+        <a href="https://upcommons.upc.edu/entities/publication/32ca42d5-c2a4-4e0b-814c-612a71cd4e9d" target="_blank" class="pub-link">UPCommons</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS + EDUCATION -->
+<div id="skills-edu">
+  <div class="skills-col">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Skills</h2>
+    </div>
+
+    <div class="skills-group">
+      <h3>Programming & Frameworks</h3>
+      <div class="skill-pills">
+        <span class="skill-pill">Python</span>
+        <span class="skill-pill">PyTorch</span>
+        <span class="skill-pill">Git</span>
+        <span class="skill-pill">NumPy / SciPy</span>
+        <span class="skill-pill">OpenCV</span>
+      </div>
+    </div>
+
+    <div class="skills-group">
+      <h3>Research Areas</h3>
+      <div class="skill-pills">
+        <span class="skill-pill">Generative Models (GAN, Diffusion)</span>
+        <span class="skill-pill">Medical Image Analysis</span>
+        <span class="skill-pill">Computational Pathology</span>
+        <span class="skill-pill">Object Tracking</span>
+        <span class="skill-pill">Image Synthesis</span>
+        <span class="skill-pill">Computer Vision</span>
+      </div>
+    </div>
+
+    <div class="skills-group">
+      <h3>Other</h3>
+      <div class="skill-pills">
+        <span class="skill-pill">Scientific Writing</span>
+        <span class="skill-pill">Statistical Analysis</span>
+        <span class="skill-pill">Data Visualisation</span>
+        <span class="skill-pill">Technical Teaching</span>
+      </div>
+    </div>
+
+    <div class="skills-group">
+      <h3>Languages</h3>
+      <div class="skill-pills">
+        <span class="skill-pill">Catalan — Native</span>
+        <span class="skill-pill">Spanish — Native</span>
+        <span class="skill-pill">English — C1</span>
+        <span class="skill-pill">French — B2</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="edu-col">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Education</h2>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-degree">PhD in Medical Imaging & Computer Vision</div>
+      <div class="edu-inst">UPC — Image Processing Group (GPI)</div>
+      <div class="edu-year">2025 — Present</div>
+      <div class="edu-note">AI pipelines for medical imaging tasks spanning MRI synthesis, histopathology classification, and cell detection.</div>
+      <div class="edu-badge"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg> FI-STEP Grant</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-degree">Master's in Computer Vision</div>
+      <div class="edu-inst">Centre de Visió per Computador (CVC)</div>
+      <div class="edu-year">2023 — 2024</div>
+      <div class="edu-note">Human & Computer Vision, Optimisation, ML, 3D Vision, Visual Recognition, Video Analysis.</div>
+      <div class="edu-badge"><svg viewBox="0 0 24 24"><path d="M12 15l-2 5-3-1 1-5m4 1l2 5 3-1-1-5"/><circle cx="12" cy="8" r="5"/></svg> Best Student Record</div>
+      <br>
+      <div class="edu-badge"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg> Best Master Thesis — ACMCV</div>
+    </div>
+
+    <div class="edu-item">
+      <div class="edu-degree">Bachelor's in Data Science and Engineering</div>
+      <div class="edu-inst">Universitat Politècnica de Catalunya (UPC)</div>
+      <div class="edu-year">2019 — 2023</div>
+      <div class="edu-note">Algorithms, Signals & Systems, ML/DL, Computer Vision, NLP, Databases.</div>
+      <div class="edu-badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> Erasmus+ — Chalmers University</div>
+    </div>
+  </div>
+</div>
+
+<!-- TEACHING -->
+<section id="teaching">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Teaching</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="teaching-grid">
+    <div class="teach-card">
+      <div class="teach-course">Machine Learning I</div>
+      <div class="teach-program">BSc Data Science and Engineering · UPC</div>
+      <div class="teach-period">2026 — Present</div>
+      <div class="teach-desc">Laboratory sessions, student mentoring, and evaluation of practical assignments.</div>
+    </div>
+
+    <div class="teach-card">
+      <div class="teach-course">Deep Learning & Computer Vision</div>
+      <div class="teach-program">Postgraduate in AI with Deep Learning · UPC School</div>
+      <div class="teach-period">2025 — Present</div>
+      <div class="teach-desc">Laboratory sessions and advisor of a final project group.</div>
+    </div>
+
+    <div class="teach-card">
+      <div class="teach-course">Deep Learning for AI</div>
+      <div class="teach-program">MSc Telecommunications Engineering & MSc ATT · UPC</div>
+      <div class="teach-period">2025 — Present</div>
+      <div class="teach-desc">Laboratory sessions, student mentoring, and evaluation of practical assignments.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" style="border-top: none;">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">Contact</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <p class="contact-intro">
+    Open to research collaborations, PhD stay opportunities, and conversations about AI in medical imaging. Don't hesitate to reach out.
+  </p>
+
+  <div class="contact-grid">
+    <a href="mailto:sigrid.vila@upc.edu" class="contact-box">
+      <span class="contact-box-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
+      <div class="contact-box-label">Email</div>
+      <div class="contact-box-value">sigrid.vila@upc.edu</div>
+    </a>
+    <a href="https://linkedin.com/in/sigridvilabagaria" target="_blank" class="contact-box">
+      <span class="contact-box-icon"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></span>
+      <div class="contact-box-label">LinkedIn</div>
+      <div class="contact-box-value">sigridvilabagaria</div>
+    </a>
+    <a href="https://github.com/siiigrid" target="_blank" class="contact-box">
+      <span class="contact-box-icon"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></span>
+      <div class="contact-box-label">GitHub</div>
+      <div class="contact-box-value">View Code</div>
+    </a>
+    <a href="https://scholar.google.com/citations?user=68dAJXcAAAAJ&hl=ca&oi=ao" target="_blank" class="contact-box">
+      <span class="contact-box-icon"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+      <div class="contact-box-label">Google Scholar</div>
+      <div class="contact-box-value">Publications</div>
+    </a>
+  </div>
+
+  <div class="footer-line">
+    <div class="footer-name">Sígrid Vila Bagaria</div>
+    <div class="footer-copy">PhD Student · UPC Image Processing Group · Barcelona, 2026</div>
+  </div>
+</section>
+
+<script>
+// Cursor
+const cur = document.getElementById('cur');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+});
+
+// Progress bar
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  prog.style.width = pct + '%';
+});
+
+// Smooth reveal on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.award-card, .tl-item, .proj-card, .pub-card, .teach-card, .edu-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity .5s ease, transform .5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
